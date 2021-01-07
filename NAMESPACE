@@ -1,0 +1,13 @@
+export(plrt.model, scb.mean, cv.score, plugin.select, scb.model,
+cv.select, scb.equal)
+
+S3method(print,SCBand)
+S3method(summary,SCBand)
+S3method(plot,SCBand)
+
+import(boot,KernSmooth)
+importFrom("grDevices", "extendrange")
+importFrom("graphics", "matlines", "matplot", "matpoints")
+importFrom("stats", "approx", "cov", "cov2cor", "ecdf", "fitted", "lm",
+             "model.matrix", "optimize", "pchisq", "quantile",
+             "residuals", "rnorm", "sd")
