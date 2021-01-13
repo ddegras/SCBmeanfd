@@ -1,5 +1,5 @@
 scb.mean <- function(x, y, bandwidth, level = .95, degree = 1, 
-	scbtype = c("normal","bootstrap","both","no"), gridsize = length(x), 
+	scbtype = c("normal","bootstrap","both","tGKF","no"), gridsize = length(x), 
 	keep.y = TRUE, nrep = 2e4, nboot = 5e3, parallel = c("no","multicore","snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 {
@@ -39,14 +39,27 @@ scb.mean <- function(x, y, bandwidth, level = .95, degree = 1,
 		lb.boot   <- mu.hat - q.boot * se
 		ub.boot   <- mu.hat + q.boot * se	
 	}
+	if (scbtype %in% c("tGKF","both")) {
+	  # Estimate the LKCs
+	  L = LKCest( R = r / se / sqrt(n), x = x )
+	  # Get the tGKF threshold
+	  q.tGKF <- EEC_threshold <- function( LKC,
+	                                       alpha    = ( 1 - level ) * 0.5,
+	                                       df = n - 1,
+	                                       interval = c( 0, 100 )
+	  ) 
+	  lb.tGKF <- mu.hat - q.tGKF * se
+	  ub.tGKF <- mu.hat + q.tGKF * se	
+	}
 
 	result <- list( x = x, y = if(keep.y) y else NULL, call = caLL, model = NULL,
-					par = NULL, nonpar = mu.hat, bandwidth = bandwidth,
-					degree = degree, level = level, scbtype = scbtype,
+					par      = NULL, nonpar = mu.hat, bandwidth = bandwidth,
+					degree   = degree, level = level, scbtype = scbtype,
 					teststat = NULL, pnorm = NULL, pboot = NULL, 
-					qnorm = q.norm, qboot = q.boot,
-					normscb = cbind(lb.norm, ub.norm), 
-					bootscb = cbind(lb.boot, ub.boot), 
+					qnorm    = q.norm, qboot = q.boot, qtGKF = q.tGKF,
+					normscb  = cbind(lb.norm, ub.norm), 
+					bootscb  = cbind(lb.boot, ub.boot),
+					tGKFscb  = cbind(lb.tGKF, ub.tGKF),
 					gridsize = gridsize, nrep = nrep, nboot = nboot )
 	class(result) <- "SCBand"
 	return(result)

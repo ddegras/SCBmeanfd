@@ -77,6 +77,20 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 		lb.boot <- mu1.hat - q.boot * se
 		ub.boot <- mu1.hat + q.boot * se	
 	}
+	
+	if (scbtype %in% c("tGKF","both")) {
+	  c = n2 / n1;
+	  # Estimate the LKCs
+	  L = LKCest( R = r / se / sqrt(n), x = x,  )
+	  # Get the tGKF threshold
+	  q.tGKF <- EEC_threshold <- function( LKC,
+	                                       alpha    = ( 1 - level ) * 0.5,
+	                                       df = n - 1,
+	                                       interval = c( 0, 100 )
+	  ) 
+	    lb.tGKF <- mu.hat - q.tGKF * se
+	  ub.tGKF <- mu.hat + q.tGKF * se	
+	}
 
 	result <- list( x = list(x1, x2), y = if(keep.y) y else NULL, call = caLL, model = NULL, par = NULL, nonpar = cbind(mu1.hat, mu2.hat), bandwidth = bandwidth, degree = degree, level = level, scbtype = scbtype, teststat = test.stat, pnorm = p.norm, pboot = p.boot, qnorm = q.norm, qboot = q.boot, normscb = cbind(lb.norm, ub.norm), bootscb = cbind(lb.boot, ub.boot), gridsize = gridsize, nrep = nrep, nboot = nboot )
 

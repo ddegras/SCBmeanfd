@@ -64,13 +64,26 @@ scb.model <- function(x, y, model, bandwidth, level = .05, degree = 1,
 		lb.boot <- nonpar.mu.hat - q.boot * se
 		ub.boot <- nonpar.mu.hat + q.boot * se	
 	}
+	
+	if (scbtype %in% c("tGKF","both")) {
+	  # Estimate the LKCs
+	  L = LKCest( R = r / se / sqrt(n), x = x )
+	  # Get the tGKF threshold
+	  q.tGKF <- EEC_threshold <- function( LKC,
+	                                       alpha    = ( 1 - level ) * 0.5,
+	                                       df = n - 1,
+	                                       interval = c( 0, 100 )
+	  ) 
+	  lb.tGKF <- mu.hat - q.tGKF * se
+	  ub.tGKF <- mu.hat + q.tGKF * se	
+	}
 
 	result <- list( x = x, y = if(keep.y) y else NULL, call = caLL, model = model, 
 		par = smooth.par.mu.hat, nonpar = nonpar.mu.hat, bandwidth = bandwidth, 
 		degree = degree, level = level, scbtype = scbtype, teststat = test.stat,
-		pnorm = p.norm, pboot = p.boot, qnorm = q.norm, qboot = q.boot, 
+		pnorm = p.norm, pboot = p.boot, qnorm = q.norm, qtGKF = q.tGKF, qtGKF = q.tGKF, 
 		normscb = cbind(lb.norm, ub.norm), bootscb = cbind(lb.boot, ub.boot), 
-		gridsize = gridsize, nrep = nrep, nboot = nboot )
+		tGKFscb = cbind(lb.tGKF, ub.tGKF),gridsize = gridsize, nrep = nrep, nboot = nboot )
 
 	class(result) <- "SCBand"
 	return(result)	
