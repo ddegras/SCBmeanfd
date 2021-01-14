@@ -25,15 +25,16 @@ EEC_threshold <- function( LKC,
   tailProb     <- function( u ){ EEC_function( u ) - alpha }
 
   # return the approximation of the quantile from the tGKF
-  uniroot( tailProb, interval )$root
+  list( q = uniroot( tailProb, interval )$root, EEC = EEC_function )
 }
 
 # estimates the LKCs from normed residuals
-LKCest = function( R, x = NULL, Q = NULL ){
+LKCest = function( R, x = NULL, Q = NULL, xQ = NULL ){
   # Get default coordinate values
   if( is.null(x) ){
     x <- seq( 0, 1, length.out = dimR[1] )
   }
+  
     
   #---------------------------------------------------------------------------
   # Compute L1
@@ -71,7 +72,7 @@ LKCest = function( R, x = NULL, Q = NULL ){
     dQ <- apply( Q, 2,
                  FUN = function( yy ){
                    # Interpolate the function
-                   fn <- stats::splinefun( x = x,
+                   fn <- stats::splinefun( x = xQ,
                                            y = yy,
                                            method = "natural" )
                    # Obtain the derivative of the function
@@ -86,7 +87,8 @@ LKCest = function( R, x = NULL, Q = NULL ){
     # integrate the standard deviation of the derivative using trapozoid rule to
     # get the LKC
     dvar = sqrt( dR.sd^2 + dQ.sd^2 )
-    L <- sum( diff(x) / 2 * ( dvar[ 1:( length(dR.sd) - 1 ) ] + dvar[ 2:length(dR.sd) ] ) )
+    L <- sum( diff(x) / 2 * ( dvar[ 1:( length(dR.sd) - 1 ) ] +
+                              dvar[ 2:length(dR.sd) ] ) )
     
     return( L )
     
