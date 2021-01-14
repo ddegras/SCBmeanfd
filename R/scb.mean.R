@@ -1,5 +1,5 @@
 scb.mean <- function(x, y, bandwidth, level = .95, degree = 1, 
-	scbtype = c("normal","bootstrap","both","tGKF","no"), gridsize = length(x), 
+	scbtype = c("normal","bootstrap","tGKF","both","no"), gridsize = length(x), 
 	keep.y = TRUE, nrep = 2e4, nboot = 5e3, parallel = c("no","multicore","snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 {
@@ -16,6 +16,7 @@ scb.mean <- function(x, y, bandwidth, level = .95, degree = 1,
 	se <- sigma.hat / sqrt(n)
 	r <- y.hat - mu.hat  	
 	lb.norm = ub.norm = lb.boot = ub.boot = q.norm = q.boot = NULL
+	lb.tGKF = ub.tGKF = q.tGKF = NULL
 	scbtype <- match.arg(scbtype)	
 
 	if (scbtype %in% c("normal","both")) {
@@ -43,11 +44,13 @@ scb.mean <- function(x, y, bandwidth, level = .95, degree = 1,
 	  # Estimate the LKCs
 	  L = LKCest( R = r / se / sqrt(n), x = x )
 	  # Get the tGKF threshold
-	  q.tGKF <- EEC_threshold <- function( LKC,
-	                                       alpha    = ( 1 - level ) * 0.5,
-	                                       df = n - 1,
-	                                       interval = c( 0, 100 )
-	  ) 
+	  q.tGKF <- EEC_threshold( L,
+	                           alpha    = ( 1 - level ) * 0.5,
+	                           df = n - 1,
+	                           interval = c( 0, 100 )
+	  )
+	  q.tGKF <- q.tGKF$q
+	  
 	  lb.tGKF <- mu.hat - q.tGKF * se
 	  ub.tGKF <- mu.hat + q.tGKF * se	
 	}
