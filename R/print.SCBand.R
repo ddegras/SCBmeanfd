@@ -6,15 +6,16 @@ function(x, ...)
 		cat("\nMean function estimation\n")
 		cat("Bandwidth:", round(object$bandwidth,4), "\n")
 		cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-			bootstrap = "boostrap", both = "normal and bootstrap"),"\n")
+			bootstrap = "boostrap", tGKF = "tGKF", both = "normal, bootstrap and tGKF"),"\n")
 		if (object$scbtype != "no") {
 				cat("Confidence level:", object$level, "\n")
 				cat("Quantile used for SCB:\n")		
 				statresult <- if (object$scbtype == "normal") { data.frame(object$qnorm)
 								} else if (object$scbtype == "boot") { data.frame(object$qboot)
-								} else data.frame(object$qnorm, object$qboot)
+								} else if (object$scbtype == "tGKF") { data.frame(object$qtGKF)
+								} else data.frame(object$qnorm, object$qboot, object$qtGKF)
 				names(statresult) <- c(switch(object$scbtype, normal = "normal", 
-				bootstrap = "bootstrap", both = c("normal", "bootstrap")))
+				bootstrap = "bootstrap", tGKF = "tGKF", both = c("normal", "bootstrap", "tGKF")))
 				print(statresult, print.gap = 2L, right = FALSE, digits = 4L, row.names = FALSE)
 		}
 
@@ -37,6 +38,14 @@ function(x, ...)
 			paste0("<1e-", as.integer(ceiling(log(object$pboot, 10))))  
 	   		} else object$pboot
 		
+		PtGKF <- if (is.null(object$ptGKF)) { 
+		  NULL
+    		} else if (object$ptGKF == 0) { 
+    		  "<1e-16"
+    		} else if (object$ptGKF < 1e-4) { 
+    		  paste0("<1e-", as.integer(ceiling(log(object$ptGKF, 10))))  
+    		} else object$ptGKF
+		
 		if (object$scbtype == "normal") {
 			statresult <- data.frame(object$teststat, Pnorm)
 			names(statresult) <- c("stat", "p")
@@ -44,10 +53,14 @@ function(x, ...)
 		else if (object$scbtype == "bootstrap") {
 			statresult <- data.frame(object$teststat, Pboot)
 			names(statresult) <- c("stat", "p")
+		}
+		else if (object$scbtype == "tGKF") {
+		  statresult <- data.frame(object$teststat, PtGKF)
+		  names(statresult) <- c("stat", "p")
 		} 
 		else { 
-			statresult <- data.frame(object$teststat, Pnorm, Pboot)
-			names(statresult) <- c("stat", "normal p", "bootstrap p")	
+			statresult <- data.frame(object$teststat, Pnorm, Pboot, PtGKF)
+			names(statresult) <- c("stat", "normal p", "bootstrap p", "tGKF p")	
 		}
 		
 		if (length(object$model)) {		
@@ -61,7 +74,7 @@ function(x, ...)
 			else cat("function space of dimension", ncol(object$model),"\n")
 			cat("Bandwidth:", round(object$bandwidth, 4), "\n")
 			cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-				bootstrap = "boostrap", both = "normal and bootstrap"),"\n")
+				bootstrap = "boostrap", tGKF = "tGKF", both = "normal, bootstrap and tGKF"),"\n")
 			if (object$scbtype != "no") {
 			cat("Significance level:", object$level, "\n")
 			cat("Test statistic and p value\n")
@@ -73,7 +86,7 @@ function(x, ...)
 			cat("\nEquality test for mean functions\n\n")
 			cat("Bandwidths:", round(object$bandwidth,4),"\n")
 			cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-				bootstrap = "boostrap", both = "normal and bootstrap"),"\n")
+				bootstrap = "boostrap", tGKF = "tGKF", both = "normal, bootstrap and tGKF"),"\n")
 			if (object$scbtype != "no") {
 				cat("Significance level:", object$level, "\n")
 				cat("Test statistic and p value\n")

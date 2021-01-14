@@ -32,7 +32,7 @@ function(object, ...)
 		cat("Bandwidth:", round(object$bandwidth,4), "\n")
 		cat("Grid size:", object$gridsize, "\n")
 		cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-			bootstrap = "boostrap", both = "normal and bootstrap"),"\n")
+			bootstrap = "boostrap", tGKF = "tGKF", both = "normal, bootstrap and tGKF"),"\n")
 		if (object$scbtype != "no") {
 				cat("Confidence level:", object$level, "\n")
 				cat("Replicates:", switch(object$scbtype, normal = paste(object$nrep,"(normal)\n"), 
@@ -41,9 +41,10 @@ function(object, ...)
 				cat("Quantile used for SCB:\n")		
 				statresult <- if (object$scbtype == "normal") { data.frame(object$qnorm)
 								} else if (object$scbtype == "boot") { data.frame(object$qboot)
-								} else data.frame(object$qnorm, object$qboot)
+								} else if (object$scbtype == "tGKF") { data.frame(object$qtGKF)
+								} else data.frame(object$qnorm, object$qboot, object$qtGKF)
 				names(statresult) <- c(switch(object$scbtype, normal = "normal", 
-				bootstrap = "bootstrap", both = c("normal", "bootstrap")))
+				bootstrap = "bootstrap", tGKF = "tGKF", both = c("normal", "bootstrap", "tGKF")))
 				print(statresult, print.gap = 2L, right = FALSE, digits = 4L, row.names = FALSE)
 		}
 
