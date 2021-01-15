@@ -1,5 +1,5 @@
 scb.mean <- function(x, y, bandwidth, level = .95, degree = 1, 
-	scbtype = c("normal","bootstrap","tGKF","both","no"), gridsize = length(x), 
+	scbtype = c("normal","bootstrap","tGKF","all","no"), gridsize = length(x), 
 	keep.y = TRUE, nrep = 2e4, nboot = 5e3, parallel = c("no","multicore","snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 {
@@ -19,7 +19,7 @@ scb.mean <- function(x, y, bandwidth, level = .95, degree = 1,
 	lb.tGKF = ub.tGKF = q.tGKF = NULL
 	scbtype <- match.arg(scbtype)	
 
-	if (scbtype %in% c("normal","both")) {
+	if (scbtype %in% c("normal","all")) {
 		svd.r <- svd(r / sigma.hat / sqrt(n-1), nv = 0)
 		ncomp <- which.max(cumsum(svd.r$d^2) > .99 * sum(svd.r$d^2))
 		vars <- matrix(rnorm(ncomp * nrep), ncomp, nrep)
@@ -29,7 +29,7 @@ scb.mean <- function(x, y, bandwidth, level = .95, degree = 1,
 		lb.norm <- mu.hat - q.norm * se
 		ub.norm <- mu.hat + q.norm * se	
 	}
-	if (scbtype %in% c("bootstrap","both")) {
+	if (scbtype %in% c("bootstrap","all")) {
 		boot.stat <- function(mat,ix) {
 			mu.boot <- colMeans(mat[ix,])
 			sqrt(max(((n-1)*mu.boot^2)/(colSums(mat[ix,]^2)-n*mu.boot^2)) * n)
@@ -40,7 +40,7 @@ scb.mean <- function(x, y, bandwidth, level = .95, degree = 1,
 		lb.boot   <- mu.hat - q.boot * se
 		ub.boot   <- mu.hat + q.boot * se	
 	}
-	if (scbtype %in% c("tGKF","both")) {
+	if (scbtype %in% c("tGKF","all")) {
 	  # Estimate the LKCs
 	  L = LKCest( R = r / se / sqrt(n), x = x )
 	  # Get the tGKF threshold
