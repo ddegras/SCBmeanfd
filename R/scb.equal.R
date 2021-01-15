@@ -1,5 +1,5 @@
 scb.equal <- function(x, y, bandwidth, level = .05, degree = 1, 
-	scbtype = c("normal","bootstrap","both","no"), gridsize = NULL, 
+	scbtype = c("normal","bootstrap","tGKF","all","no"), gridsize = NULL, 
 	keep.y = TRUE, nrep = 2e4, nboot = 1e4, parallel = c("no","multicore","snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 {
@@ -39,12 +39,12 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 	se <- sqrt(diag(R.hat))
 	test.stat <- max(abs(mu1.hat - mu2.hat) / se)
 
-	p.norm = p.boot = NULL
-	q.norm = q.boot = NULL
-	lb.norm = ub.norm = lb.boot = ub.boot = NULL
+	p.norm = p.boot = p.tGKF = NULL
+	q.norm = q.boot = q.tGKF = NULL
+	lb.norm = ub.norm = lb.boot = ub.boot = lb.tGKF = ub.tGKF = NULL
 	scbtype <- match.arg(scbtype)	
 
-	if (scbtype %in% c("normal","both")) {
+	if (scbtype %in% c("normal","all")) {
 		eigcoR 	<- eigen(cov2cor(R.hat), TRUE)
 		ncomp 	<- which.max(cumsum(eigcoR$values) > .99 * sum(eigcoR$values))
 		vars 	<- matrix(rnorm(ncomp * nrep), ncomp, nrep)
@@ -57,7 +57,7 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 		ub.norm	<- mu1.hat + q.norm * se	
 	}
 
-	if (scbtype %in% c("bootstrap","both")) {
+	if (scbtype %in% c("bootstrap","all")) {
 		r <- cbind(y1.hat - mu1.hat, y2.hat - mu2.hat)
 		ix1 <- 1:n1
 		ix2 <- (n1+1):(n1+n2)
@@ -77,8 +77,59 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 		lb.boot <- mu1.hat - q.boot * se
 		ub.boot <- mu1.hat + q.boot * se	
 	}
+	
+	if (scbtype %in% c("tGKF","all")) {
+	  # constants
+	  c = n1 / n2;
+	  # Get the variances
+	  v1n = diag( R1.hat )
+	  v2n = diag( R2.hat )
+	  sigma.hat <- sqrt( v1n * n1 + v2n * n2 * c )
+	  
+	  # degrees of freedom
+	  df = mean(( v1n + v2n )^2 / ( v1n^2 / (n1-1) + v2n^2 / (n2-1) ))
+	  
+	  # Estimate the LKCs
+	  L = LKCest( R  = ( y1.hat - mu1.hat ) / sigma.hat,
+	              x  = x1,
+	              Q  = sqrt(c) * ( y2.hat - mu2.hat ) / sigma.hat,
+	              xQ = x2 )
+	  # Get the tGKF threshold
+	  q.tGKF <- EEC_threshold( L,
+	                           alpha    = level * 0.5,
+	                           df = df,
+	                           interval = c( 0, 100 )
+	  )
+	  p.tGKF <- q.tGKF$EEC(test.stat)
+	  q.tGKF <- q.tGKF$q
+	  # Get the simultaneous confidence bands
+	  lb.tGKF <- mu1.hat - q.tGKF * se
+	  ub.tGKF <- mu1.hat + q.tGKF * se	
+	}
 
-	result <- list( x = list(x1, x2), y = if(keep.y) y else NULL, call = caLL, model = NULL, par = NULL, nonpar = cbind(mu1.hat, mu2.hat), bandwidth = bandwidth, degree = degree, level = level, scbtype = scbtype, teststat = test.stat, pnorm = p.norm, pboot = p.boot, qnorm = q.norm, qboot = q.boot, normscb = cbind(lb.norm, ub.norm), bootscb = cbind(lb.boot, ub.boot), gridsize = gridsize, nrep = nrep, nboot = nboot )
+	result <- list( x = list(x1, x2),
+	                y = if(keep.y) y else NULL,
+	                call = caLL,
+	                model = NULL,
+	                par = NULL,
+	                nonpar = cbind(mu1.hat, mu2.hat),
+	                bandwidth = bandwidth,
+	                degree = degree,
+	                level = level,
+	                scbtype = scbtype,
+	                teststat = test.stat,
+	                pnorm = p.norm,
+	                pboot = p.boot,
+	                ptGKF = p.tGKF,
+	                qnorm = q.norm,
+	                qboot = q.boot,
+	                qtGKF = q.tGKF,
+	                normscb = cbind(lb.norm, ub.norm),
+	                bootscb = cbind(lb.boot, ub.boot),
+	                tGKFscb = cbind(lb.tGKF, ub.tGKF),
+	                gridsize = gridsize,
+	                nrep = nrep,
+	                nboot = nboot )
 
 	class(result) <- "SCBand"
 	return(result)	
