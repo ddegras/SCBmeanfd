@@ -1,5 +1,5 @@
 scb.equal <- function(x, y, bandwidth, level = .05, degree = 1, 
-	scbtype = c("normal","bootstrap","tGKF","both","no"), gridsize = NULL, 
+	scbtype = c("normal","bootstrap","tGKF","all","no"), gridsize = NULL, 
 	keep.y = TRUE, nrep = 2e4, nboot = 1e4, parallel = c("no","multicore","snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 {
@@ -44,7 +44,7 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 	lb.norm = ub.norm = lb.boot = ub.boot = lb.tGKF = ub.tGKF = NULL
 	scbtype <- match.arg(scbtype)	
 
-	if (scbtype %in% c("normal","both")) {
+	if (scbtype %in% c("normal","all")) {
 		eigcoR 	<- eigen(cov2cor(R.hat), TRUE)
 		ncomp 	<- which.max(cumsum(eigcoR$values) > .99 * sum(eigcoR$values))
 		vars 	<- matrix(rnorm(ncomp * nrep), ncomp, nrep)
@@ -57,7 +57,7 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 		ub.norm	<- mu1.hat + q.norm * se	
 	}
 
-	if (scbtype %in% c("bootstrap","both")) {
+	if (scbtype %in% c("bootstrap","all")) {
 		r <- cbind(y1.hat - mu1.hat, y2.hat - mu2.hat)
 		ix1 <- 1:n1
 		ix2 <- (n1+1):(n1+n2)
@@ -78,7 +78,7 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 		ub.boot <- mu1.hat + q.boot * se	
 	}
 	
-	if (scbtype %in% c("tGKF","both")) {
+	if (scbtype %in% c("tGKF","all")) {
 	  # constants
 	  c = n1 / n2;
 	  # Get the variances

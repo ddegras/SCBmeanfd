@@ -11,7 +11,7 @@ plot.SCBand <- function(x, y = NULL, xlim = NULL, ylim = NULL, main = NULL,
 	if (is.null(xlim)) xlim <- range(unlist(object$x))
 	if (is.null(ylim)) {
 		ylim <- range(c(unlist(object$y), unlist(y), object$par, object$nonpar,
-						object$normscb, object$bootscb), na.rm = TRUE) 
+						object$normscb, object$tGKFscb, object$bootscb), na.rm = TRUE) 
 		if (legend) ylim <- extendrange(r = ylim)
 	}
 	if (is.null(xlab)) xlab <- "Input"
@@ -26,7 +26,12 @@ plot.SCBand <- function(x, y = NULL, xlim = NULL, ylim = NULL, main = NULL,
 	nnonpar <- if (is.matrix(object$nonpar)) { 2
 		} else if (is.numeric(object$nonpar)) { 1
 		} else 0 
-	nband   <- switch(object$scbtype, no = 0, normal = 1, bootstrap = 1, both = 2)
+	nband   <- switch( object$scbtype,
+	                   no     = 0,
+	                   normal = 1,
+	                   bootstrap = 1,
+	                   tGKF   = 1,
+	                   all    = 3 )
 	nt  	<- ny + npar + nnonpar + nband 
 
 	cex <- if (is.null(cex)) rep.int(.25,ny) else rep_len(cex,ny)
@@ -34,7 +39,7 @@ plot.SCBand <- function(x, y = NULL, xlim = NULL, ylim = NULL, main = NULL,
 	col <- if (is.null(col)) 1:nt else rep_len(col,nt)
 	lty <- if (is.null(lty)) 1:(nt-ny) else rep_len(lty,nt-ny)
 	lwd <- if (is.null(lwd)) rep(2,nt-ny) else rep_len(lwd,nt-ny)
-	if (is.null(legend.cex)) legend.cex <- 1
+	if (is.null(legend.cex)) legend.cex <- 0.9*1
 	legend.pch <- c(pch,rep(NA,nt-ny)) 
 	legend.lwd <- c(rep(1,ny),lwd)
 	legend.lty <- c(rep(0,ny),lty)
@@ -60,15 +65,23 @@ plot.SCBand <- function(x, y = NULL, xlim = NULL, ylim = NULL, main = NULL,
 	}
 
 	if(ny == 0) {
-		matplot(xgrid, cbind(object$par, object$nonpar, object$normscb, 
-		object$bootscb), type = "l", col = col.graph, lty = lty.graph, lwd = lwd.graph, 
-		xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab, main = main, ...)
+		matplot( xgrid, cbind( object$par,
+		                       object$nonpar,
+		                       object$normscb,
+		                       object$tGKFscb,
+		                       object$bootscb),
+		         type = "l", col = col.graph, lty = lty.graph, lwd = lwd.graph, 
+		        xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab, main = main, ...)
 	} 
 	if (ny == 1) {
 		matplot(object$x, if(is.null(y)) t(object$y) else t(y), col = col[1],  pch = pch, 
 		xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab, cex = cex, main = main, ...)			
-		matlines(xgrid, cbind(object$par, object$nonpar, object$normscb,
-		object$bootscb), col = col.graph, lty = lty.graph, lwd = lwd.graph)			
+		matlines( xgrid, cbind( object$par,
+		                        object$nonpar,
+		                        object$normscb,
+		                        object$tGKFscb,
+		                        object$bootscb ),
+		          col = col.graph, lty = lty.graph, lwd = lwd.graph)			
 	}
 	if (ny == 2) {
 		matplot(object$x[[1]], if(is.null(y)) t(object$y[[1]]) else t(y[[1]]), col = col[1],  
@@ -76,7 +89,10 @@ plot.SCBand <- function(x, y = NULL, xlim = NULL, ylim = NULL, main = NULL,
 		main = main, ...)
 		matpoints(object$x[[2]], if(is.null(y)) t(object$y[[2]]) else t(y[[2]]), col = col[2],  
 		pch = pch[2], cex = cex[2])
-		matlines(xgrid, cbind(object$nonpar, object$normscb, object$bootscb), 
+		matlines( xgrid, cbind( object$nonpar,
+		                        object$normscb,
+		                        object$tGKFscb,
+		                        object$bootscb ), 
 		col = col.graph, lty = lty.graph, lwd = lwd.graph)			
 	}
 	
@@ -86,8 +102,10 @@ plot.SCBand <- function(x, y = NULL, xlim = NULL, ylim = NULL, main = NULL,
 			if (ny == 2) { paste("Estimate",1:2) 
 			} else if (length(object$model)) { c("Smoothed parametric", "Nonparametric")
 			} else "LP estimate", 
-			switch(object$scbtype, normal = "Normal SCB", bootstrap = "Bootstrap SCB", 
-			both = c("Normal SCB","Bootstrap SCB")))
+			switch( object$scbtype, normal = "Normal SCB",
+			                        bootstrap = "Bootstrap SCB",
+			                        tGKF   = "tGKF SCB", 
+			                        all    = c( "Normal", "tGKF", "Bootstrap" ) ) )
 		if (is.null(where)) where <- "bottomleft"
 		legend(where, legend = text, horiz = horiz, pch = legend.pch, cex = legend.cex, 
 		col = col, lty = legend.lty, lwd = legend.lwd, bty = bty)

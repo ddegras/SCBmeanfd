@@ -32,11 +32,11 @@ function(object, ...)
 		cat("Bandwidth:", round(object$bandwidth,4), "\n")
 		cat("Grid size:", object$gridsize, "\n")
 		cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-			bootstrap = "boostrap", tGKF = "tGKF", both = "normal, bootstrap and tGKF"),"\n")
+			bootstrap = "boostrap", tGKF = "tGKF", all = "normal, bootstrap and tGKF"),"\n")
 		if (object$scbtype != "no") {
 				cat("Confidence level:", object$level, "\n")
 				cat("Replicates:", switch(object$scbtype, normal = paste(object$nrep,"(normal)\n"), 
-					bootstrap = paste(object$nboot,"(bootstrap)\n"), both = paste(object$nrep,"(normal)", 
+					bootstrap = paste(object$nboot,"(bootstrap)\n"), all = paste(object$nrep,"(normal)", 
 					object$nboot,"(bootstrap)\n")))
 				cat("Quantile used for SCB:\n")		
 				statresult <- if (object$scbtype == "normal") { data.frame(object$qnorm)
@@ -44,7 +44,7 @@ function(object, ...)
 								} else if (object$scbtype == "tGKF") { data.frame(object$qtGKF)
 								} else data.frame(object$qnorm, object$qboot, object$qtGKF)
 				names(statresult) <- c(switch(object$scbtype, normal = "normal", 
-				bootstrap = "bootstrap", tGKF = "tGKF", both = c("normal", "bootstrap", "tGKF")))
+				bootstrap = "bootstrap", tGKF = "tGKF", all = c("normal", "bootstrap", "tGKF")))
 				print(statresult, print.gap = 2L, right = FALSE, digits = 4L, row.names = FALSE)
 		}
 
@@ -92,11 +92,11 @@ function(object, ...)
 			cat("Bandwidth:", round(object$bandwidth, 4), "\n")
 			cat("Grid size:", object$gridsize, "\n")
 			cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-				bootstrap = "boostrap", both = "normal and bootstrap"),"\n")
+				bootstrap = "boostrap", all = "normal and bootstrap"),"\n")
 			if (object$scbtype != "no") {
 				cat("Significance level:", object$level, "\n")
 				cat("Replicates:", switch(object$scbtype, normal = paste(object$nrep,"(normal)\n"), 
-					bootstrap = paste(object$nboot,"(bootstrap)\n"), both = paste(object$nrep,"(normal)", 
+					bootstrap = paste(object$nboot,"(bootstrap)\n"), all = paste(object$nrep,"(normal)", 
 					object$nboot,"(bootstrap)\n")))
 				cat("Test statistic and p value(s)\n")
 				print(statresult, right = FALSE, print.gap = 2L, digits = 4L, row.names = FALSE)
@@ -108,11 +108,11 @@ function(object, ...)
 			cat("Bandwidths:", round(object$bandwidth,4),"\n")
 			cat("Grid size:", object$gridsize, "\n")
 			cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-				bootstrap = "boostrap", both = "normal and bootstrap"),"\n")
+				bootstrap = "boostrap", all = "normal and bootstrap"),"\n")
 			if (object$scbtype != "no") {
 				cat("Significance level:", object$level, "\n")
 				cat("Replicates:", switch(object$scbtype, normal = paste(object$nrep,"(normal)\n"), 
-					bootstrap = paste(object$nboot,"(bootstrap)\n"), both = paste(object$nrep,"(normal)", 
+					bootstrap = paste(object$nboot,"(bootstrap)\n"), all = paste(object$nrep,"(normal)", 
 					object$nboot,"(bootstrap)\n")))
 				cat("Test statistic and p value(s)\n")
 				print(statresult, right = FALSE, print.gap = 2L, digits = 4L, row.names = FALSE)

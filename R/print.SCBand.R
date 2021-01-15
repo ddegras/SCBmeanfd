@@ -6,7 +6,7 @@ function(x, ...)
 		cat("\nMean function estimation\n")
 		cat("Bandwidth:", round(object$bandwidth,4), "\n")
 		cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-			bootstrap = "boostrap", tGKF = "tGKF", both = "normal, bootstrap and tGKF"),"\n")
+			bootstrap = "boostrap", tGKF = "tGKF", all = "normal, bootstrap and tGKF"),"\n")
 		if (object$scbtype != "no") {
 				cat("Confidence level:", object$level, "\n")
 				cat("Quantile used for SCB:\n")		
@@ -15,7 +15,7 @@ function(x, ...)
 								} else if (object$scbtype == "tGKF") { data.frame(object$qtGKF)
 								} else data.frame(object$qnorm, object$qboot, object$qtGKF)
 				names(statresult) <- c(switch(object$scbtype, normal = "normal", 
-				bootstrap = "bootstrap", tGKF = "tGKF", both = c("normal", "bootstrap", "tGKF")))
+				bootstrap = "bootstrap", tGKF = "tGKF", all = c("normal", "bootstrap", "tGKF")))
 				print(statresult, print.gap = 2L, right = FALSE, digits = 4L, row.names = FALSE)
 		}
 
@@ -74,7 +74,7 @@ function(x, ...)
 			else cat("function space of dimension", ncol(object$model),"\n")
 			cat("Bandwidth:", round(object$bandwidth, 4), "\n")
 			cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-				bootstrap = "boostrap", tGKF = "tGKF", both = "normal, bootstrap and tGKF"),"\n")
+				bootstrap = "boostrap", tGKF = "tGKF", all = "normal, bootstrap and tGKF"),"\n")
 			if (object$scbtype != "no") {
 			cat("Significance level:", object$level, "\n")
 			cat("Test statistic and p value\n")
@@ -86,7 +86,7 @@ function(x, ...)
 			cat("\nEquality test for mean functions\n\n")
 			cat("Bandwidths:", round(object$bandwidth,4),"\n")
 			cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-				bootstrap = "boostrap", tGKF = "tGKF", both = "normal, bootstrap and tGKF"),"\n")
+				bootstrap = "boostrap", tGKF = "tGKF", all = "normal, bootstrap and tGKF"),"\n")
 			if (object$scbtype != "no") {
 				cat("Significance level:", object$level, "\n")
 				cat("Test statistic and p value\n")
