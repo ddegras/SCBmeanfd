@@ -2,7 +2,6 @@ print.SCBand <- function(object, ...)
 {
 	stopifnot(inherits(object,"SCBand"))
 	callfun <- as.character(object$call[1])
-	# if (is.null(object$par) && (!is.matrix(object$nonpar)) ) {		
 	if (callfun == "scb.mean") {
 		cat("\nMean function estimation\n")
 		cat("Bandwidth:", round(object$bandwidth,4), "\n")
@@ -16,23 +15,10 @@ print.SCBand <- function(object, ...)
 			boot = data.frame(bootstrap = object$qboot),
 			tGKF = data.frame(tGKF = object$qtGKF),
 			all = data.frame(normal = object$qnorm, 
-				bootstrap = object$qboot, tGKF = object$qtGKF)
-		)
-
-		# statresult <- if (object$scbtype == "normal") { 
-			# data.frame(object$qnorm)
-		# } else if (object$scbtype == "boot") { 
-			# data.frame(object$qboot)
-		# } else if (object$scbtype == "tGKF") { 
-			# data.frame(object$qtGKF)
-		# } else data.frame(object$qnorm, object$qboot, object$qtGKF)
-		# names(statresult) <- c(switch(object$scbtype, normal = "normal", 
-			# bootstrap = "bootstrap", tGKF = "tGKF", 
-			# all = c("normal", "bootstrap", "tGKF")))
+				bootstrap = object$qboot, tGKF = object$qtGKF))
 		print(statresult, print.gap = 2L, right = FALSE, digits = 4L, 
 			row.names = FALSE)		
-	} else {
-		
+	} else {		
 		pfun <- function(p) {
 			if (is.null(p)) return(NA)
 			if (p < 1e-16) return("< 1e-16")
@@ -45,55 +31,12 @@ print.SCBand <- function(object, ...)
 			bootstrap = data.frame(object$teststat, pfun(object$pboot)),
 			tGKF = data.frame(object$teststat, pfun(object$ptGKF)),
 			all = data.frame(object$teststat, pfun(object$pnorm), 
-				pfun(object$pboot), pfun(object$ptGKF))
-		)
+				pfun(object$pboot), pfun(object$ptGKF)))
 		names(statresult) <- switch(object$scbtype,
 			normal = c("stat", "normal-p"),
 			bootstrap = c("stat", "bootstrap-p"),
 			tGKF = c("stat", "tGKF-p"),
-			all = c("stat", "normal-p", "bootstrap-p", "tGKF-p")			
-		)
-		
-		# Pnorm <- if (is.null(object$pnorm)) { 
-			# NULL
-			# } else if (object$pnorm < 1e-16) { 
-			# "<1e-16"
-		 	# } else if (object$pnorm < 1e-4) { 
-			# paste0("<1e", as.integer(ceiling(log(object$pnorm, 10))))  
-		   	# } else object$pnorm
-
-		# Pboot <- if (is.null(object$pboot)) { 
-			# NULL
-	   		# } else if (object$pboot <1e-16) { 
-			# "<1e-16"
-	   		# } else if (object$pboot < 1e-4) { 
-			# paste0("<1e", as.integer(ceiling(log(object$pboot, 10))))  
-	   		# } else object$pboot
-		
-		# PtGKF <- if (is.null(object$ptGKF)) { 
-		  # NULL
-    		# } else if (object$ptGKF < 1e-16) { 
-    		  # "<1e-16"
-    		# } else if (object$ptGKF < 1e-4) { 
-    		  # paste0("<1e", as.integer(ceiling(log(object$ptGKF, 10))))  
-    		# } else object$ptGKF
-		
-		# if (object$scbtype == "normal") {
-			# statresult <- data.frame(object$teststat, Pnorm)
-			# names(statresult) <- c("stat", "p")
-		# } 
-		# else if (object$scbtype == "bootstrap") {
-			# statresult <- data.frame(object$teststat, Pboot)
-			# names(statresult) <- c("stat", "p")
-		# }
-		# else if (object$scbtype == "tGKF") {
-		  # statresult <- data.frame(object$teststat, PtGKF)
-		  # names(statresult) <- c("stat", "p")
-		# } 
-		# else { 
-			# statresult <- data.frame(object$teststat, Pnorm, Pboot, PtGKF)
-			# names(statresult) <- c("stat", "normal p", "bootstrap p", "tGKF p")	
-		# }
+			all = c("stat", "normal-p", "bootstrap-p", "tGKF-p"))
 		
 		if (callfun == "scb.model") {
 			cat("\nGoodness-of-fit test\n") 	
@@ -102,8 +45,7 @@ print.SCBand <- function(object, ...)
 				if (object$model == 0) { cat ("zero\n") 
 				} else if (object$model == 1) { cat("linear\n")
 				} else cat("polynomial of degree <=", object$model,"\n")
-			} 	
-			else cat("function space of dimension", ncol(object$model),"\n")
+			} else cat("function space of dimension", ncol(object$model),"\n")
 			cat("Bandwidth:", round(object$bandwidth, 4), "\n")
 			cat("SCB type:", switch(object$scbtype, normal = "normal", 
 				bootstrap = "boostrap", tGKF = "tGKF", 
