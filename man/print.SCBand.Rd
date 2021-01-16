@@ -29,7 +29,7 @@ data range, bandwidth used in local polynomial estimation, and key information o
 data(plasma)
 time <- 8:21
 h <- cv.select(time, plasma, 1)
-scbplasma <- scb.mean(time, plasma, bandwidth = h, scbtype = "both", gridsize = 100)
+scbplasma <- scb.mean(time, plasma, bandwidth = h, scbtype = "all", gridsize = 100)
 scbplasma
 }
 }

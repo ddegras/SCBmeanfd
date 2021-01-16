@@ -1,5 +1,5 @@
-export(plrt.model, scb.mean, cv.score, plugin.select, scb.model,
-cv.select, scb.equal)
+export(cv.score, cv.select, plrt.model, plugin.select,
+   scb.equal, scb.mean, scb.model)
 
 S3method(print,SCBand)
 S3method(summary,SCBand)
@@ -9,5 +9,5 @@ import(boot,KernSmooth)
 importFrom("grDevices", "extendrange")
 importFrom("graphics", "matlines", "matplot", "matpoints")
 importFrom("stats", "approx", "cov", "cov2cor", "ecdf", "fitted", "lm",
-             "model.matrix", "optimize", "pchisq", "quantile",
-             "residuals", "rnorm", "sd")
+             "model.matrix", "optimize", "pchisq", "pt", "quantile",
+             "residuals", "rnorm", "sd", "uniroot")

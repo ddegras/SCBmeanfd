@@ -1,11 +1,11 @@
 Package: SCBmeanfd
 Type: Package
 Title: Simultaneous Confidence Bands for the Mean of Functional Data
-Version: 1.2.3
-Date: 2020-12-18
-Author: David Degras
+Version: 1.3
+Date: 2021-1-14
+Author: David Degras, Fabian Telschow
 Maintainer: David Degras <ddegrasv@gmail.com>
-Description: Statistical methods for estimating and inferring the mean of functional data. The methods include simultaneous confidence bands, local polynomial fitting,  bandwidth selection by plug-in and cross-validation, goodness-of-fit tests for parametric models, equality tests for two-sample problems, and plotting functions.   
+Description: Statistical methods for estimating and inferring the mean of functional data. The methods include simultaneous confidence bands (parametric/nonparametric bootstrap + Gaussian kinematic formula), local polynomial fitting,  bandwidth selection by plug-in and cross-validation, goodness-of-fit tests for parametric models, equality tests for two-sample problems, and plotting functions.   
 License: GPL-3
 Depends: R (>= 3.3), stats, graphics
 Imports: boot, KernSmooth

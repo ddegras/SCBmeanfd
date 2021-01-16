@@ -10,8 +10,9 @@ Fit a local linear estimator and build simultaneous confidence bands (SCB) for t
 }
 \usage{
 scb.mean(x, y, bandwidth, level = .95, degree = 1, 
-	scbtype = c("normal","bootstrap","both","no"), gridsize = length(x), 
-	keep.y = TRUE, nrep = 2e4, nboot = 5e3, parallel = c("no", "multicore", "snow"), 
+	scbtype = c("normal","bootstrap","tGKF","all","no"), 
+	gridsize = length(x), keep.y = TRUE, nrep = 2e4, nboot = 5e3, 
+	parallel = c("no", "multicore", "snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 }
 
@@ -27,7 +28,7 @@ scb.mean(x, y, bandwidth, level = .95, degree = 1,
 
 \item{degree}{the degree of the local polynomial fit.}
 
-\item{scbtype}{the type of simultaneous confidence bands to build: "normal", "bootstrap", "both", or "no".}
+\item{scbtype}{the type of simultaneous confidence bands to build: "normal", "bootstrap", "tGKF", "all", or "no".}
 
 \item{gridsize}{the size of the grid used to evaluate the mean function estimates and SCB. Defaults to \emph{length(x)}.}
 
@@ -68,19 +69,24 @@ Currently, only local linear estimation is supported.}
 \item{pboot}{\code{NULL}.}  
 \item{qnorm}{the quantile used to build the normal SCB.}
 \item{qboot}{the quantile used to build the bootstrap SCB.}
+\item{qtGKF}{the quantile used to build the tGKF-SCB.}
 \item{normscb}{a matrix containing the normal SCB stored in columns.}
 \item{bootscb}{a matrix containing the bootstrap SCB stored in columns.}
+\item{tGKFscb}{a matrix containing the tGKF-SCB stored in columns.}
 \item{gridsize}{the argument \code{gridsize} if nonnull, else  \emph{length(x)}.}
 \item{nrep}{the argument \code{nrep}.}
 \item{nboot}{the argument \code{nboot}.}
 
 
-Depending on the value of \code{scbtype}, some of  
-the fields \code{qnorm}, \code{normscb}, \code{nrep}, \code{qboot}, \code{normboot} and \code{nboot} may be \code{NULL}.
+Depending on the value of \code{scbtype}, some of  the fields \code{qnorm}, \code{normscb}, \code{nrep}, \code{qboot}, \code{normboot}, \code{nboot}, \code{qtGKF}, and \code{tGKFscb} may be \code{NULL}.
 }
 
 \references{
 Degras, D. (2011). Simultaneous confidence bands for nonparametric regression with functional data. \emph{Statistica Sinica}, \bold{21}, 1735--1765.
+
+Degras, D. (2017). Simultaneous confidence bands for the mean of functional data. \emph{WIREs Computational Statistics} \bold{e1397}.
+
+Telschow, F.J.E. and Schwartzman, A. (2019). Simultaneous confidence bands for functional data using the Gaussian kinematic formula. \emph{arXiV}
 }
 
 

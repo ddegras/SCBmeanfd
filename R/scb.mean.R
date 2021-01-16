@@ -42,7 +42,10 @@ scb.mean <- function(x, y, bandwidth, level = .95, degree = 1,
 	}
 	if (scbtype %in% c("tGKF","all")) {
 	  # Estimate the LKCs
-	  L = LKCest( R = r / se / sqrt(n), x = x )
+	  # L = LKCest( R = r / se / sqrt(n), x = x )
+	  xout <- seq(min(x), max(x), len = gridsize)
+	  L <- LKCest( R = r / sigma.hat, x = xout )
+
 	  # Get the tGKF threshold
 	  q.tGKF <- EEC_threshold( L,
 	                           alpha    = ( 1 - level ) * 0.5,

@@ -1,14 +1,15 @@
 \name{scb.equal}
 \alias{scb.equal}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-Compare Two Mean Functions}
+
+\title{Compare Two Mean Functions}
+
 \description{
 This two-sample test builds simultaneous confidence bands (SCB) for the difference between two population mean functions and retains the equality assumption if the null function is contained in the bands. Equivalently, SCB are built around one of the local linear estimates (the one for say, population 1), and the equality hypothesis is  accepted if the other estimate (the one for  population 2) lies within the bands.
 }
+
 \usage{
 scb.equal(x, y, bandwidth, level = .05, degree = 1, 
-	scbtype = c("normal","bootstrap","both","no"), gridsize = NULL, 
+	scbtype = c("normal","bootstrap","tGKF","all","no"), gridsize = NULL, 
 	keep.y = TRUE, nrep = 2e4, nboot = 1e4, parallel = c("no","multicore","snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 }
@@ -24,7 +25,7 @@ scb.equal(x, y, bandwidth, level = .05, degree = 1,
 
 \item{degree}{the degree of the local polynomial fit.}
 
-\item{scbtype}{the type of simultaneous confidence bands to build: "normal", "bootstrap", "both", or "no". }
+\item{scbtype}{the type of simultaneous confidence bands to build: "normal", "bootstrap", "tGKF", "all", or "no". }
 
 \item{gridsize}{the size of the grid over which the mean function is to be estimated. Defaults to the length of the smallest \code{x} grid.}
 
@@ -63,19 +64,25 @@ Currently, only local linear estimation is supported.}
 \item{pboot}{the \emph{p} value for the boostrap-based statistical test.}  
 \item{qnorm}{the quantile used to build the normal SCB.}
 \item{qboot}{the quantile used to build the bootstrap SCB.}
+\item{qtGKF}{the quantile used to build the tGKF-SCB.}
 \item{normscb}{a matrix containing the normal SCB stored in columns.}
 \item{bootscb}{a matrix containing the bootstrap SCB stored in columns.}
+\item{tGKFscb}{a matrix containing the tGKF-SCB stored in columns.}
 \item{gridsize}{the argument \code{gridsize}, or \emph{length(x)} if no argument was specified.}
 \item{nrep}{the argument \code{nrep}.}
 \item{nboot}{the argument \code{nboot}.}
 
 
 Depending on the value of \code{scbtype}, some or all of  
-the fields \code{pnorm}, \code{qnorm}, \code{normscb}, \code{nrep},  \code{pboot}, \code{qboot}, \code{normboot} and \code{nboot} may be   \code{NULL}.
+the fields \code{pnorm}, \code{qnorm}, \code{normscb}, \code{nrep},  \code{pboot}, \code{qboot}, \code{normboot}, \code{nboot}, \code{ptGKF}, and \code{qtGKF} may be \code{NULL}.
 }
 
 \references{
 Degras, D. (2011). Simultaneous confidence bands for nonparametric regression with functional data. \emph{Statistica Sinica}, \bold{21}, 1735--1765.
+
+Degras, D. (2017). Simultaneous confidence bands for the mean of functional data. \emph{WIREs Computational Statistics} \bold{e1397}.
+
+Telschow, F.J.E. and Schwartzman, A. (2019). Simultaneous confidence bands for functional data using the Gaussian kinematic formula. \emph{arXiV}
 }
 
 

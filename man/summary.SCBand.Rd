@@ -26,7 +26,7 @@ The function \code{summary.SCBand} displays all fields of a \code{SCBand} object
 data(plasma)
 time <- 8:21
 h <- cv.select(time, plasma, 1)
-scbplasma <- scb.mean(time, plasma, bandwidth = h, scbtype = "both", gridsize = 100)
+scbplasma <- scb.mean(time, plasma, bandwidth = h, scbtype = "all", gridsize = 100)
 summary(scbplasma)
 }
 }

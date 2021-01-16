@@ -7,7 +7,7 @@ This is the goodness-of-fit test for parametric models of the mean function desc
 }
 \usage{
 scb.model(x, y, model, bandwidth, level = .05, degree = 1, 
-	scbtype = c("normal","bootstrap","both","no"), gridsize = length(x), 
+	scbtype = c("normal","bootstrap","tGKF","all","no"), gridsize = length(x), 
 	keep.y = TRUE, nrep = 2e4, nboot = 5e3, parallel = c("no", "multicore", "snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 }
@@ -25,7 +25,7 @@ scb.model(x, y, model, bandwidth, level = .05, degree = 1,
 
 \item{degree}{the degree of the local polynomial fit.}
 
-\item{scbtype}{the type of simultaneous confidence bands to build: "normal", "bootstrap", "both", or "no".}
+\item{scbtype}{the type of simultaneous confidence bands to build: "normal", "bootstrap", "tGKF", "all", or "no".}
 
 \item{gridsize}{the size of the grid over which the mean function is to be estimated. Defaults to \code{length(x)}.}
 
@@ -74,6 +74,10 @@ the fields \code{pnorm}, \code{qnorm}, \code{normscb}, \code{nrep},  \code{pboot
 
 \references{
 Degras, D. (2011). Simultaneous confidence bands for nonparametric regression with functional data.\cr \emph{Statistica Sinica}, \bold{21}, 1735--1765.
+
+Degras, D. (2017). Simultaneous confidence bands for the mean of functional data. \emph{WIREs Computational Statistics} e1397.
+
+Telschow, F.J.E. and Schwartzman, A. (2019). Simultaneous confidence bands for functional data using the Gaussian kinematic formula. \emph{arXiV}
 }
 
 \seealso{

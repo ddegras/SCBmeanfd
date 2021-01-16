@@ -87,7 +87,7 @@ scb.model <- function(x, y, model, bandwidth, level = .05, degree = 1,
 		degree = degree, level = level, scbtype = scbtype, teststat = test.stat,
 		pnorm = p.norm, pboot = p.boot,  ptGKF = p.tGKF, qnorm = q.norm, qtGKF = q.tGKF, qtGKF = q.tGKF, 
 		normscb = cbind(lb.norm, ub.norm), bootscb = cbind(lb.boot, ub.boot), 
-		tGKFscb = cbind(lb.tGKF, ub.tGKF),gridsize = gridsize, nrep = nrep, nboot = nboot )
+		tGKFscb = cbind(lb.tGKF, ub.tGKF), gridsize = gridsize, nrep = nrep, nboot = nboot )
 
 	class(result) <- "SCBand"
 	return(result)	

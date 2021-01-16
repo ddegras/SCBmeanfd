@@ -58,7 +58,7 @@ By default a legend is plotted horizontally at the bottom of the graph.
 time <- 8:21
 data(plasma)
 h <- cv.select(time, plasma, degree = 1, interval = c(.5, 1))
-scbplasma <- scb.mean(time, plasma, bandwidth = h, scbtype = "both",
+scbplasma <- scb.mean(time, plasma, bandwidth = h, scbtype = "all",
                       gridsize = 100)
 plot(scbplasma, cex = .2, legend.cex = .85, xlab = "Time of day", 
      ylab = "Concentration", main = "Plasma citrate data")
