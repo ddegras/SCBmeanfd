@@ -103,7 +103,7 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 	                           df = df,
 	                           interval = c( 0, 100 )
 	  )
-	  p.tGKF <- q.tGKF$EEC(test.stat)
+	  p.tGKF <- min(q.tGKF$EEC(test.stat),1)
 	  q.tGKF <- q.tGKF$q
 	  # Get the simultaneous confidence bands
 	  lb.tGKF <- mu1.hat - q.tGKF * se

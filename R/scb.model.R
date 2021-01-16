@@ -75,7 +75,7 @@ scb.model <- function(x, y, model, bandwidth, level = .05, degree = 1,
 	                           df = n - 1,
 	                           interval = c( 0, 100 )
 	  )
-	  p.tGKF <- q.tGKF$EEC(test.stat)
+	  p.tGKF <- min(q.tGKF$EEC(test.stat),1)
 	  q.tGKF <- q.tGKF$q
 	  
 	  # Get the simultaneous confidence bands

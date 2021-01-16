@@ -42,7 +42,6 @@ splineDeriv <- function(y, x, h = NULL)
 LKCest <- function( R, x = NULL, Q = NULL, xQ = NULL ){
   # Get default coordinate values
   if( is.null(x) ){
-    # x <- seq( 0, 1, length.out = dimR[1] )
     x <- seq( 0, 1, length.out = dim(R)[1] )
   }
   
@@ -94,6 +93,8 @@ LKCest <- function( R, x = NULL, Q = NULL, xQ = NULL ){
                                    # n = 1,
                                    # method = "central")
                  # } )
+    if (is.null(xQ)) 
+    		xQ <- seq(0, 1, len = dim(Q)[1])
     dQ <- apply(Q, 2, splineDeriv, x = xQ)
              
     # get standard deviation of derivative
