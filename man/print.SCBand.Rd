@@ -6,10 +6,10 @@ Print a SCBand Object}
 \description{
 \code{print} method for class \code{"SCBand"}.
 }
-\usage{\method{print}{SCBand}(x,...)}
+\usage{\method{print}{SCBand}(object,...)}
 
 \arguments{
-  \item{x}{an object of class \code{"SCBand"}.}
+  \item{object}{an object of class \code{"SCBand"}.}
   \item{...}{for compatibility with the generic \code{print} method; argument not currently used.}
 }
 

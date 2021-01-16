@@ -1,5 +1,5 @@
 scb.mean <- function(x, y, bandwidth, level = .95, degree = 1, 
-	scbtype = c("normal","bootstrap","tGKF","all","no"), gridsize = length(x), 
+	scbtype = c("normal","bootstrap","tGKF","all"), gridsize = length(x), 
 	keep.y = TRUE, nrep = 2e4, nboot = 5e3, parallel = c("no","multicore","snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 {

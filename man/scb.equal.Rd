@@ -51,8 +51,6 @@ A list object of \link[base]{class} \code{"SCBand"}. Depending on the  function 
 \item{y}{
 if \code{keep.y} is \code{TRUE}, the argument \code{y}, else \code{NULL}.}
 \item{\code{call}}{the function call.}
-\item{\code{model}}{\code{NULL}.}  
-\item{\code{par}}{\code{NULL}.}
 \item{\code{nonpar}}{a list of two local linear estimates, one for each population.}
 \item{\code{bandwidth}}{the argument \code{bandwidth}.}
 \item{degree}{the degree of local polynomial used. 
@@ -78,9 +76,9 @@ the fields \code{pnorm}, \code{qnorm}, \code{normscb}, \code{nrep},  \code{pboot
 }
 
 \references{
-Degras, D. (2011). Simultaneous confidence bands for nonparametric regression with functional data. \emph{Statistica Sinica}, \bold{21}, 1735--1765.
+Degras, D. (2011). Simultaneous confidence bands for nonparametric regression with functional data. \emph{Statistica Sinica} 21, 1735--1765.
 
-Degras, D. (2017). Simultaneous confidence bands for the mean of functional data. \emph{WIREs Computational Statistics} \bold{e1397}.
+Degras, D. (2017). Simultaneous confidence bands for the mean of functional data. \emph{WIREs Computational Statistics} e1397.
 
 Telschow, F.J.E. and Schwartzman, A. (2019). Simultaneous confidence bands for functional data using the Gaussian kinematic formula. \emph{arXiV}
 }
@@ -102,7 +100,7 @@ classes <- split(1:n,phoneme[,N])
 names(classes) <- c("sh", "iy", "dcl", "aa", "ao")
 freq    <- 1:150
 compare.aa.ao <- scb.equal(freq, list(phoneme[classes$aa,-N], 
-  phoneme[classes$ao,-N]), bandwidth = c(.75, .75), scbtype = "both", nboot = 2e3)
+  phoneme[classes$ao,-N]), bandwidth = c(.75, .75), scbtype = "all", nboot = 2e3)
 summary(compare.aa.ao)
 }
 }

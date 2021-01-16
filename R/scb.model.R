@@ -1,5 +1,5 @@
 scb.model <- function(x, y, model, bandwidth, level = .05, degree = 1,
-	scbtype = c("normal","bootstrap","tGKF","all","no"), gridsize = length(x), 
+	scbtype = c("normal","bootstrap","tGKF","all"), gridsize = length(x), 
 	keep.y = TRUE, nrep = 2e4, nboot = 5e3, parallel = c("no", "multicore", "snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 {
@@ -67,7 +67,8 @@ scb.model <- function(x, y, model, bandwidth, level = .05, degree = 1,
 	
 	if (scbtype %in% c("tGKF","all")) {
 	  # Estimate the LKCs
-	  L = LKCest( R = r / se / sqrt(n), x = x )
+	  xgrid <- seq(min(x), max(x), len=gridsize)
+	  L = LKCest( R = r / sigma.hat, x = xgrid )
 	  # Get the tGKF threshold
 	  q.tGKF <- EEC_threshold( L,
 	                           alpha    = ( 1 - level ) * 0.5,

@@ -1,7 +1,8 @@
 \name{scb.model}
 \alias{scb.model}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{Goodness-Of-Fit of a Model for the Mean Function}
+
 \description{
 This is the goodness-of-fit test for parametric models of the mean function described in Degras (2011). The candidate model must be a finite-dimensional function space (curvilinear regression). The test is based on the sup-norm distance between a smoothed parametric estimate and a local linear estimate. Graphically, the candidate model is retained whenever one of the estimates lies within the SCB built around the other.  
 }
@@ -67,13 +68,12 @@ Currently, only local linear estimation is supported.}
 \item{nboot}{the argument \code{nboot}.}
 
 
-Depending on the value of \code{scbtype}, some or all of  
-the fields \code{pnorm}, \code{qnorm}, \code{normscb}, \code{nrep},  \code{pboot}, \code{qboot}, \code{normboot} and \code{nboot} may be   \code{NULL}.
+Depending on \code{scbtype}, some or all of the fields \code{pnorm}, \code{qnorm}, \code{normscb}, \code{nrep},  \code{pboot}, \code{qboot}, \code{normboot} and \code{nboot} may be \code{NULL}.
 
 }
 
 \references{
-Degras, D. (2011). Simultaneous confidence bands for nonparametric regression with functional data.\cr \emph{Statistica Sinica}, \bold{21}, 1735--1765.
+Degras, D. (2011). Simultaneous confidence bands for nonparametric regression with functional data.\cr \emph{Statistica Sinica} 21, 1735--1765.
 
 Degras, D. (2017). Simultaneous confidence bands for the mean of functional data. \emph{WIREs Computational Statistics} e1397.
 

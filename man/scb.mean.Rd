@@ -8,6 +8,7 @@ Build Simultaneous Confidence Bands for Mean Functions
 \description{
 Fit a local linear estimator and build simultaneous confidence bands (SCB) for the mean of functional data.  
 }
+
 \usage{
 scb.mean(x, y, bandwidth, level = .95, degree = 1, 
 	scbtype = c("normal","bootstrap","tGKF","all","no"), 
@@ -51,22 +52,17 @@ Bootstrap SCB are implemented with the \code{\link[boot]{boot}} function and typ
 }
 
 \value{
-An object of \link[base]{class} \code{"SCBand"}. To accommodate the different functions creating objects of this class (\code{\link{scb.mean}}, \code{\link{scb.model}}, and \code{\link{scb.equal}}), some components of the object are set to \code{NULL}. The component list is:
+An object of \link[base]{class} \code{"SCBand"} with components:
 
 \item{\code{x}}{the x data.}
 \item{\code{y}}{the y data if \code{keep.y} is \code{TRUE}, else \code{NULL}.}
 \item{\code{call}}{the function call.}
-\item{\code{model}}{\code{NULL}.}  
-\item{\code{par}}{\code{NULL}.}
 \item{\code{nonpar}}{a nonparametric estimate.}
 \item{bandwidth}{the argument \code{bandwidth}.}
 \item{degree}{the degree of local polynomial used. 
 Currently, only local linear estimation is supported.}
 \item{level}{the argument \code{level}.}
 \item{scbtype}{the argument \code{type}.}
-\item{teststat}{\code{NULL}.}
-\item{pnorm}{\code{NULL}.} 
-\item{pboot}{\code{NULL}.}  
 \item{qnorm}{the quantile used to build the normal SCB.}
 \item{qboot}{the quantile used to build the bootstrap SCB.}
 \item{qtGKF}{the quantile used to build the tGKF-SCB.}
@@ -78,13 +74,13 @@ Currently, only local linear estimation is supported.}
 \item{nboot}{the argument \code{nboot}.}
 
 
-Depending on the value of \code{scbtype}, some of  the fields \code{qnorm}, \code{normscb}, \code{nrep}, \code{qboot}, \code{normboot}, \code{nboot}, \code{qtGKF}, and \code{tGKFscb} may be \code{NULL}.
+Depending on \code{scbtype}, some of  the fields \code{qnorm}, \code{normscb}, \code{nrep}, \code{qboot}, \code{normboot}, \code{nboot}, \code{qtGKF}, and \code{tGKFscb} may be \code{NULL}.
 }
 
 \references{
-Degras, D. (2011). Simultaneous confidence bands for nonparametric regression with functional data. \emph{Statistica Sinica}, \bold{21}, 1735--1765.
+Degras, D. (2011). Simultaneous confidence bands for nonparametric regression with functional data. \emph{Statistica Sinica} 21, 1735--1765.
 
-Degras, D. (2017). Simultaneous confidence bands for the mean of functional data. \emph{WIREs Computational Statistics} \bold{e1397}.
+Degras, D. (2017). Simultaneous confidence bands for the mean of functional data. \emph{WIREs Computational Statistics} e1397.
 
 Telschow, F.J.E. and Schwartzman, A. (2019). Simultaneous confidence bands for functional data using the Gaussian kinematic formula. \emph{arXiV}
 }

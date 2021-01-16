@@ -1,5 +1,5 @@
 scb.equal <- function(x, y, bandwidth, level = .05, degree = 1, 
-	scbtype = c("normal","bootstrap","tGKF","all","no"), gridsize = NULL, 
+	scbtype = c("normal","bootstrap","tGKF","all"), gridsize = NULL, 
 	keep.y = TRUE, nrep = 2e4, nboot = 1e4, parallel = c("no","multicore","snow"), 
 	ncpus = getOption("boot.ncpus",1L), cl = NULL)
 {
@@ -14,13 +14,15 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 	} else if (NCOL(x) == 1) {
 		x1 <- x2 <- x 
 	}		
-	if (x1[1] != x2[1] || x1[length(x1)] != x2[length(x2)])
+
+	if (any(range(x1) != range(x2)))
 		stop("The range of x is not the same in the two samples")
 
 	y1 <- y[[1]]
 	y2 <- y[[2]]
 	if (length(x1) != ncol(y1) || length(x2) != ncol(y2))
 		stop("The dimensions of x and y do not match in at least one sample") 
+	
 	if (is.null(gridsize))
 		gridsize <- min(length(x1),length(x2))
 		
@@ -80,7 +82,7 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 	
 	if (scbtype %in% c("tGKF","all")) {
 	  # constants
-	  c = n1 / n2;
+	  c = n1 / n2
 	  # Get the variances
 	  v1n = diag( R1.hat )
 	  v2n = diag( R2.hat )
@@ -90,10 +92,11 @@ scb.equal <- function(x, y, bandwidth, level = .05, degree = 1,
 	  df = mean(( v1n + v2n )^2 / ( v1n^2 / (n1-1) + v2n^2 / (n2-1) ))
 	  
 	  # Estimate the LKCs
-	  L = LKCest( R  = ( y1.hat - mu1.hat ) / sigma.hat,
-	              x  = x1,
+	  xgrid <- seq(min(x1), max(x1), len = gridsize)
+	  L <- LKCest( R  = ( y1.hat - mu1.hat ) / sigma.hat,
+	              x  = xgrid,
 	              Q  = sqrt(c) * ( y2.hat - mu2.hat ) / sigma.hat,
-	              xQ = x2 )
+	              xQ = xgrid )
 	  # Get the tGKF threshold
 	  q.tGKF <- EEC_threshold( L,
 	                           alpha    = level * 0.5,
