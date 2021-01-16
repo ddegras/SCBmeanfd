@@ -86,7 +86,8 @@ scb.model <- function(x, y, model, bandwidth, level = .05, degree = 1,
 	result <- list( x = x, y = if(keep.y) y else NULL, call = caLL, model = model, 
 		par = smooth.par.mu.hat, nonpar = nonpar.mu.hat, bandwidth = bandwidth, 
 		degree = degree, level = level, scbtype = scbtype, teststat = test.stat,
-		pnorm = p.norm, pboot = p.boot,  ptGKF = p.tGKF, qnorm = q.norm, qtGKF = q.tGKF, qtGKF = q.tGKF, 
+		pnorm = p.norm, pboot = p.boot,  ptGKF = p.tGKF, 
+		qnorm = q.norm, qboot = q.boot, qtGKF = q.tGKF, 
 		normscb = cbind(lb.norm, ub.norm), bootscb = cbind(lb.boot, ub.boot), 
 		tGKFscb = cbind(lb.tGKF, ub.tGKF), gridsize = gridsize, nrep = nrep, nboot = nboot )
 

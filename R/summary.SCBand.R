@@ -1,31 +1,30 @@
 summary.SCBand <- function(object, ...) 
 {
-	stopifnot(inherits(object,"SCBmeanfd"))
+	stopifnot(inherits(object,"SCBand"))
 	callfun <- as.character(object$call[1])
 	cat("\nCall:\n", paste(deparse(object$call), sep = "\n", collapse = "\n"), 
 		"\n\n", sep = "")
 
 	cat("Data:\n")
 	if (is.list(object$x)) {
-	df <- data.frame( c(paste0("[", round(min(object$x[[1]]),3),
-		", ",round(max(object$x[[1]]),3),"]"),		
-		if (!is.null(object$y)) {
-			c(paste0("[",round(min(object$y[[1]]),3),", ",
-			round(max(object$y[[1]]),3),"]"), 
-			nrow(object$y[[1]])) }), 
-			c(paste0("[", round(min(object$x[[1]]),3),", ",
-			round(max(object$x[[1]]),3),"]"),		
+		df <- data.frame( c(paste0("[", round(min(object$x[[1]]),3),
+			", ",round(max(object$x[[1]]),3),"]"),		
 			if (!is.null(object$y)) {
-			c(paste0("[",round(min(object$y[[2]]),3),", ",
-			round(max(object$y[[2]]),3),"]"), 
-			nrow(object$y[[2]]))
-		})
+				c(paste0("[",round(min(object$y[[1]]),3),", ",
+				round(max(object$y[[1]]),3),"]"), 
+				nrow(object$y[[1]])) }), 
+				c(paste0("[", round(min(object$x[[1]]),3),", ",
+				round(max(object$x[[1]]),3),"]"),		
+				if (!is.null(object$y)) {
+				c(paste0("[",round(min(object$y[[2]]),3),", ",
+				round(max(object$y[[2]]),3),"]"), 
+				nrow(object$y[[2]]))
+			})
 	)
 	colnames(df) <- paste("Data",1:2)
 	rownames(df) <- c("Range.x", if(!is.null(object$y)) c("Range.y", "Sample size"))
 	print(df, print.gap = 2L, right = FALSE, digits = 4L, row.names = TRUE)
-	}
-	else {
+	} else {
 	cat("Range(x): [", round(min(object$x),3),", ",round(max(object$x),3),"]\n", sep="")
 		if (!is.null(object$y)) {
 			cat("Range(y): [",round(min(object$y),3),", ",round(max(object$y),3),"]\n", sep="")
@@ -35,15 +34,13 @@ summary.SCBand <- function(object, ...)
 	
 	
 	cat("\nAnalysis:\n")
-	if (callfun == "scb.mean")
-	# if (is.null(object$par) && (!is.matrix(object$nonpar)) ) {		
+	if (callfun == "scb.mean") {
 		cat("Mean function estimation\n")
 		cat("Bandwidth:", round(object$bandwidth,4), "\n")
 		cat("Grid size:", object$gridsize, "\n")
 		cat("SCB type:", switch(object$scbtype, normal = "normal", 
 			bootstrap = "boostrap", tGKF = "tGKF", 
 			all = "normal, bootstrap, tGKF"),"\n")
-		# if (object$scbtype != "no") {
 		cat("Confidence level:", object$level, "\n")
 		cat("Replicates:", switch(object$scbtype, 
 			normal = paste(object$nrep,"(normal)\n"), 
@@ -86,10 +83,10 @@ summary.SCBand <- function(object, ...)
 				pfun(object$qboot), pfun(object$qtGKF))
 		)
 		names(statresult) <- switch(object$scbtype,
-			normal = c("stat", "normal p"),
-			boot = c("stat", "bootstrap p"),
-			tGKF = c("stat", "tGKF p"),
-			all = c("stat", "normal p","bootstrap p", "tGKF p")			
+			normal = c("stat", "normal-p"),
+			boot = c("stat", "bootstrap-p"),
+			tGKF = c("stat", "tGKF-p"),
+			all = c("stat", "normal-p", "bootstrap-p", "tGKF-p")			
 		)
 		# Pnorm <- if (is.null(object$pnorm)) { 
 			# NULL
@@ -129,8 +126,7 @@ summary.SCBand <- function(object, ...)
 			# names(statresult) <- c("supnorm", "normal p", "bootstrap p", "tGKF p")	
 		# }
 		
-		# if (length(object$model)) {		
-		if (callfun == "scb.model")
+		if (callfun == "scb.model") {
 			cat("Goodness-of-fit test\n") 	
 			if (object$model == 0) {
 				cat ("Model: zero mean function\n") 
@@ -138,45 +134,38 @@ summary.SCBand <- function(object, ...)
 				cat("Model: linear mean function\n")
 			} else if (length(object$model) == 1) {
 				cat("Model: polynomial mean function of degree <=", object$model,"\n")
-			} else cat("Model: mean function in function space of dimension", ncol(object$model),"\n")	
+			} else cat("Model: mean function in function space of dimension",
+				ncol(object$model),"\n")	
 			cat("Bandwidth:", round(object$bandwidth, 4), "\n")
 			cat("Grid size:", object$gridsize, "\n")
-			cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
+			cat("SCB type:", switch(object$scbtype, normal = "normal", 
 				bootstrap = "boostrap", all = "normal and bootstrap"),"\n")
-			if (object$scbtype != "no") {
-				cat("Significance level:", object$level, "\n")
-				cat("Replicates:", switch(object$scbtype, 
-					normal = paste(object$nrep,"(normal)\n"), 
-					bootstrap = paste(object$nboot,"(bootstrap)\n"), 
-					all = paste(object$nrep,"(normal)", 
-					object$nboot,"(bootstrap)\n")))
-				if (scb.type != "no") {
-					cat("Test statistic and p value(s)\n")
-					print(statresult, right = FALSE, print.gap = 2L, digits = 4L,
-					 	row.names = FALSE)
-				}
-			} 
+			cat("Significance level:", object$level, "\n")
+			cat("Replicates:", switch(object$scbtype, 
+				normal = paste(object$nrep,"(normal)\n"), 
+				bootstrap = paste(object$nboot,"(bootstrap)\n"), 
+				all = paste(object$nrep,"(normal)", 
+				object$nboot,"(bootstrap)\n")))
+			cat("Test statistic and p-value\n")
+			print(statresult, right = FALSE, print.gap = 2L, digits = 4L,
+			 	row.names = FALSE)
 	
-		} 
-		else {
+		} else {
 			cat("Equality test for mean functions\n")
 			cat("Bandwidths:", round(object$bandwidth,4),"\n")
 			cat("Grid size:", object$gridsize, "\n")
-			cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
+			cat("SCB type:", switch(object$scbtype, normal = "normal", 
 				bootstrap = "boostrap", tGKF = "tGKF", 
-				all = "normal, bootstrap, and tGKF"),"\n")
-			# if (object$scbtype != "no") {
+				all = "normal, bootstrap, tGKF"),"\n")
 			cat("Significance level:", object$level, "\n")
 			cat("Replicates:", switch(object$scbtype, 
 				normal = paste(object$nrep,"(normal)\n"), 
 				bootstrap = paste(object$nboot,"(bootstrap)\n"), 
 				all = paste(object$nrep,"(normal)", object$nboot,"(bootstrap)\n")))
 				# if (scb.type != "no") {
-			cat("Test statistic and p value(s)\n")
+			cat("Test statistic and p-value\n")
 			print(statresult, right = FALSE, print.gap = 2L, digits = 4L,
 						row.names = FALSE)
-				# }
-			# } 
 		}
 	}
 

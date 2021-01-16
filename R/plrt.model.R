@@ -62,7 +62,7 @@ plrt.model <- function(x, y, model, verbose = FALSE)
 			} else cat("polynomial of degree <=", model,"\n")
 		} 
 		else cat("function space of dimension", ncol(model),"\n")	
-		cat("Bandwidth:", round(h, 4), "\nTest statistic and p value\n")
+		cat("Bandwidth:", round(h, 4), "\nTest statistic and p-value\n")
 		df <- data.frame(F = Ftest, p = pval)
 		print(df, digits = 4, row.names = FALSE)
 		return(invisible(pval))

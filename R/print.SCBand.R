@@ -1,6 +1,6 @@
 print.SCBand <- function(object, ...) 
 {
-	stopifnot(inherits(object,"SCBmeanfd"))
+	stopifnot(inherits(object,"SCBand"))
 	callfun <- as.character(object$call[1])
 	# if (is.null(object$par) && (!is.matrix(object$nonpar)) ) {		
 	if (callfun == "scb.mean") {
@@ -8,7 +8,7 @@ print.SCBand <- function(object, ...)
 		cat("Bandwidth:", round(object$bandwidth,4), "\n")
 		cat("SCB type:", switch(object$scbtype, normal = "normal", 
 			bootstrap = "boostrap", tGKF = "tGKF", 
-			all = "normal, bootstrap and tGKF"),"\n")
+			all = "normal, bootstrap, tGKF"),"\n")
 		cat("Confidence level:", object$level, "\n")
 		cat("Quantile used for SCB:\n")		
 		statresult <- switch(object$scbtype,
@@ -41,17 +41,17 @@ print.SCBand <- function(object, ...)
 			return(p) 
 		}
 		statresult <- switch(object$scbtype,
-			normal = data.frame(object$teststat, pfun(object$qnorm)),
-			boot = data.frame(object$teststat, pfun(object$qboot)),
-			tGKF = data.frame(object$teststat, pfun(object$qtGKF)),
-			all = data.frame(object$teststat, pfun(object$qnorm), 
-				pfun(object$qboot), pfun(object$qtGKF))
+			normal = data.frame(object$teststat, pfun(object$pnorm)),
+			bootstrap = data.frame(object$teststat, pfun(object$pboot)),
+			tGKF = data.frame(object$teststat, pfun(object$ptGKF)),
+			all = data.frame(object$teststat, pfun(object$pnorm), 
+				pfun(object$pboot), pfun(object$ptGKF))
 		)
 		names(statresult) <- switch(object$scbtype,
-			normal = c("stat", "normal p"),
-			boot = c("stat", "bootstrap p"),
-			tGKF = c("stat", "tGKF p"),
-			all = c("stat", "normal p","bootstrap p", "tGKF p")			
+			normal = c("stat", "normal-p"),
+			bootstrap = c("stat", "bootstrap-p"),
+			tGKF = c("stat", "tGKF-p"),
+			all = c("stat", "normal-p", "bootstrap-p", "tGKF-p")			
 		)
 		
 		# Pnorm <- if (is.null(object$pnorm)) { 
@@ -95,7 +95,6 @@ print.SCBand <- function(object, ...)
 			# names(statresult) <- c("stat", "normal p", "bootstrap p", "tGKF p")	
 		# }
 		
-		# if (length(object$model)) {		
 		if (callfun == "scb.model") {
 			cat("\nGoodness-of-fit test\n") 	
 			cat ("Model for the mean function: ")
@@ -106,25 +105,23 @@ print.SCBand <- function(object, ...)
 			} 	
 			else cat("function space of dimension", ncol(object$model),"\n")
 			cat("Bandwidth:", round(object$bandwidth, 4), "\n")
-			cat("SCB type:", switch(object$scbtype, no = "no SCB", normal = "normal", 
-				bootstrap = "boostrap", tGKF = "tGKF", all = "normal, bootstrap and tGKF"),"\n")
-			# if (object$scbtype != "no") {
+			cat("SCB type:", switch(object$scbtype, normal = "normal", 
+				bootstrap = "boostrap", tGKF = "tGKF", 
+				all = "normal, bootstrap, tGKF"),"\n")
 			cat("Significance level:", object$level, "\n")
-			cat("Test statistic and p value\n")
-			print(statresult, right = FALSE, print.gap = 2L, digits = 4L, row.names = FALSE)
-			# } 
-	
-		} 
-		else {
+			cat("Test statistic and p-value\n")
+			print(statresult, right = FALSE, print.gap = 2L, digits = 4L, 
+				row.names = FALSE)
+		} else {
 			cat("\nEquality test for mean functions\n\n")
 			cat("Bandwidths:", round(object$bandwidth,4),"\n")
 			cat("SCB type:", switch(object$scbtype, normal = "normal", 
-				bootstrap = "boostrap", tGKF = "tGKF", all = "normal, bootstrap and tGKF"),"\n")
-			# if (object$scbtype != "no") {
+				bootstrap = "boostrap", tGKF = "tGKF", 
+				all = "normal, bootstrap, tGKF"),"\n")
 			cat("Significance level:", object$level, "\n")
-			cat("Test statistic and p value\n")
-			print(statresult, right = FALSE, print.gap = 2L, digits = 4L, row.names = FALSE)
-			# } 
+			cat("Test statistic and p-value\n")
+			print(statresult, right = FALSE, print.gap = 2L, digits = 4L, 
+				row.names = FALSE)
 		} 
 	}
 }
